@@ -1,23 +1,31 @@
 import React from 'react';
 import { HashRouter as Router, Route, Link } from 'react-router-dom';
 
-import Home from './pages/Home';
-import About from './pages/About';
-import Topics from './pages/Topics';
+const Child = ({ match }) => (
+  <div>
+    ID: {match.params.id}
+  </div>
+);
+
+// http://localhost:3000/#/order/asc
+const ComponentWithRegex = ({ match }) => (
+  <div>
+    只匹配 order 下的 asc/desc，当前： {match.params.direction}
+  </div>
+);
 
 function App() {
   return (
     <Router>
       <div>
         <ul>
-          <li><Link to="/">Home</Link></li>
-          <li><Link to="/about">About</Link></li>
-          <li><Link to="/topics">Topics</Link></li>
-          <hr />
-          <Route exact path="/" component={Home} />
-          <Route path="/about" component={About} />
-          <Route path="/topics" component={Topics} />
+          <li><Link to="/netflix">Netflix</Link></li>
+          <li><Link to="/yahoo">Yahoo</Link></li>
+          <li><Link to="/huawei">Huawei</Link></li>
         </ul>
+        <hr />
+        <Route path="/:id" component={Child} />
+        <Route path="/order/:direction(asc|desc)" component={ComponentWithRegex} />
       </div>
     </Router>
   );
