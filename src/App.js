@@ -1,39 +1,64 @@
 import React from 'react';
-import { HashRouter as Router, Route, Link, Prompt, withRouter } from 'react-router-dom';
+import { HashRouter as Router, Route, Link } from 'react-router-dom';
 
-const Home = () => (
-  <div>Home</div>
-);
-
-const About = () => (
-  <div>About</div>
-);
-
-const MyPrompt = withRouter(({ location }) => {
-  return (
-    <Prompt
-      when={location.pathname === '/about'}
-      message={(dd) => {
-        const bool = window.confirm('您确定要离开该页面吗?');
-        return bool;
-      }}
-    />
-  );
-})
+const routes = [
+  {
+    title: 'Home',
+    path: '/',
+    exact: true,
+    component: () => <div>Home</div>,
+  },
+  {
+    title: 'About',
+    path: '/about',
+    component: () => <div>About</div>,
+  },
+  {
+    title: 'Setting',
+    path: '/setting',
+    component: () => <div>Setting</div>,
+  }
+];
 
 function App() {
   return (
     <Router>
-      <div>
-        <ul>
-          <li><Link to="/">Home</Link></li>
-          <li><Link to="/about">About</Link></li>
-        </ul>
-        <hr />
-        <Route exact path="/" component={Home} />
-        <Route path="/about" component={About} />
+      <div
+        style={{
+          display: 'flex'
+        }}
+      >
+        <div
+          style={{
+            width: '60px',
+            marginRight: '10px',
+            padding: '20px',
+            backgroundColor: '#ccc'
+          }}
+        >
+          {routes.map((item) =>
+            <Route
+              exact={item.exact}
+              path={item.path}
+              children={({ match }) =>
+                <div>
+                  {match ? '>' : ''}
+                  <Link to={item.path}>{item.title}</Link>
+                </div>
+              }
+            />
+          )}
+        </div>
+        <div
+          style={{
+            flex: 1
+          }}
+        >
+          {routes.map((item) =>
+            <Route exact={item.exact} path={item.path} component={item.component} />
+          )}
+        </div>
       </div>
-      <MyPrompt />
     </Router>
   );
 }
