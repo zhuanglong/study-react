@@ -1,16 +1,52 @@
 import React from 'react';
 import { HashRouter as Router, Route, Link, Switch } from 'react-router-dom';
 
-const Home = () => (
-  <div>Home</div>
+const Home = () => <div>首页</div>;
+const Info = () => <div>个人信息</div>;
+const Setting = () => <div>系统设置</div>;
+const About = ({ routes }) => (
+  <div>
+    系统设置
+    <ul>
+      <li><Link to="/about/info">个人信息</Link></li>
+      <li><Link to="/about/setting">系统设置</Link></li>
+    </ul>
+    {routes.map((route, index) => (
+      <RouteWithSubRoutes key={index} {...route} />
+    ))}
+  </div>
 );
 
-const About = () => (
-  <div>About</div>
-);
+const routes = [
+  {
+    path: '/',
+    exact: true,
+    component: Home,
+  },
+  {
+    path: '/about',
+    component: About,
+    routes: [
+      {
+        path: '/about/info',
+        component: Info,
+      },
+      {
+        path: '/about/setting',
+        component: Setting,
+      }
+    ]
+  }
+];
 
-const NoMatch = () => (
-  <div>404</div>
+const RouteWithSubRoutes = (route) => (
+  <Route
+    path={route.path}
+    exact={route.exact}
+    render={(props) => (
+      <route.component {...props} routes={route.routes} />
+    )}
+  />
 );
 
 function App() {
@@ -18,15 +54,14 @@ function App() {
     <Router>
       <div>
         <ul>
-          <li><Link to="/">Home</Link></li>
-          <li><Link to="/about">About</Link></li>
-          <li><Link to="/setting">Setting</Link></li>
+          <li><Link to="/">首页</Link></li>
+          <li><Link to="/about">我的</Link></li>
         </ul>
         <hr />
         <Switch>
-          <Route exact path="/" component={Home} />
-          <Route path="/about" component={About} />
-          <Route path="*" component={NoMatch} />
+          {routes.map((route, index) => (
+            <RouteWithSubRoutes key={index} {...route} />
+          ))}
         </Switch>
       </div>
     </Router>
